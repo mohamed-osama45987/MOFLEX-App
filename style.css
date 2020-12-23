@@ -15,6 +15,10 @@
 	display: flex;
 	overflow-y: hidden;
 	overflow-x: scroll;
+	-webkit-overflow-y: hidden;
+	-webkit-overflow-x: scroll;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 	padding: 20px;
 }
 

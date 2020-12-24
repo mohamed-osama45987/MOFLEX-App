@@ -83,10 +83,10 @@ const makeBanner = async () => {
 	bannerContentDiv.innerHTML = `
         <h1 class="banner__title">${choosenMovie.name}</h1>    
         <div class="banner__buttons">
-            <button class='banner__button'>Play</button>
-            <button class='banner__button'>My List</button>
+            <a href="https://www.netflix.com/eg-en/login" target="new"><button class='banner__button'>Play</button></a>
+            <a href="https://media.netflix.com/en/" target="new"><button class='banner__button'>My List</button></a>
         </div>
-        <h1 class='banner__discription'>${choosenMovie.overview}</h1>
+        <h1 class='banner__discription'>${choosenMovie.overview}</h1>               
 	`;
 
 	//for fading the bottom od the banner

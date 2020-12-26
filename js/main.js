@@ -64,8 +64,8 @@ makeNavBar();
 
 //make banner.
 const makeBanner = async () => {
-	const netFlixriginals = requestsEndPoints.fetchNetflixOriginals;
-	const bannerData = await makeRequest(baseUrl, netFlixriginals);
+	const netFlixoriginals = requestsEndPoints.fetchNetflixOriginals;
+	const bannerData = await makeRequest(baseUrl, netFlixoriginals);
 
 	const randNum = Math.floor(Math.random() * bannerData.length);
 
@@ -141,7 +141,8 @@ const makeRowData = () => {
 						const term = element.title;
 						await movieTrailer(`${term}`)
 							.then((res) => {
-								trailerLink.setAttribute('href', `${res}`);
+								makePopup(`${res}`);
+								window.scrollTo(0, 0);
 							})
 							.catch(() => {
 								console.log('Trailer Not found');
@@ -153,3 +154,41 @@ const makeRowData = () => {
 	});
 };
 makeRowData();
+
+const popUp = document.createElement('div');
+const makePopup = (link) => {
+	var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+	var match = link.match(regExp);
+	const videoId = match && match[7].length == 11 ? match[7] : false;
+
+	popUp.classList.add('popUp');
+
+	popUp.innerHTML = `
+	
+	<div class="popup__conatiner">
+	<div class="close">✖️</div>
+	  <iframe id="ytplayer" type="text/html" style="position: absolute;
+	  top:5vh;
+	  left: 5vw;
+	  bottom:0;
+	  right:0;
+	  width: 90vw;
+	  height: 80vh; " 
+	  allowfullscreen="allowfullscreen"
+        mozallowfullscreen="mozallowfullscreen" 
+        msallowfullscreen="msallowfullscreen" 
+        oallowfullscreen="oallowfullscreen" 
+        webkitallowfullscreen="webkitallowfullscreen"
+	 	src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+		frameborder="0"  />
+	</div>
+		`;
+
+	const app = document.querySelector('.app');
+	app.prepend(popUp);
+
+	const closeIcon = document.querySelector('.close');
+	closeIcon.addEventListener('click', () => {
+		app.removeChild(popUp);
+	});
+};

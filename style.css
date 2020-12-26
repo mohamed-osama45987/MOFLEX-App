@@ -1,5 +1,19 @@
 * {
 	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+body {
+	min-width: 100%;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .app {
@@ -8,7 +22,7 @@
 
 .row {
 	color: #fff;
-	margin-left: 20px;
+	margin-left: 1.25rem;
 }
 
 .row__posters {
@@ -19,18 +33,23 @@
 	-webkit-overflow-x: scroll;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
-	padding: 20px;
+	padding: 1.25rem;
 }
 
 .row__posters::-webkit-scrollbar {
 	display: none;
 }
 
+::-webkit-scrollbar {
+	width: 0;
+	background: transparent;
+}
+
 .row__poster {
 	object-fit: contain;
 	width: 100%;
-	max-height: 130px;
-	margin-right: 96px;
+	max-height: 8.125rem;
+	margin-right: 6rem;
 	transition: transform 450ms;
 }
 
@@ -39,8 +58,8 @@
 }
 
 #NetflixOriginals .row__poster {
-	max-height: 250px;
-	margin-right: 180px;
+	max-height: 15.63rem;
+	margin-right: 11.25rem;
 	transition: transform 450ms;
 }
 #NetflixOriginals .row__poster:hover {
@@ -52,13 +71,13 @@
 	background-position: center center;
 	color: white;
 	object-fit: contain;
-	height: 448px;
+	height: 28rem;
 }
 
 .banner__contents {
-	margin-left: 30px;
-	padding-top: 140px;
-	height: 190px;
+	margin-left: 1.875rem;
+	padding-top: 8.75rem;
+	height: 11.88rem;
 }
 
 .banner__title {
@@ -68,12 +87,13 @@
 }
 
 .banner__discription {
-	width: 45rem;
+	width: 20rem;
 	line-height: 1.3;
 	padding-top: 1rem;
 	font-size: 0.8rem;
-	max-width: 360px;
-	height: 80px;
+	max-width: 22.5rem;
+	height: 5rem;
+	font-size: .82rem;
 }
 
 .banner__button {
@@ -100,14 +120,15 @@
 .banner--fadeBottom {
 	height: 7.4rem;
 	background-image: linear-gradient(180deg, transparent, rgba(37, 37, 37, 0.61), #111);
+	margin-top: 10rem;
 }
 
 .nav {
 	position: fixed;
 	top: 0;
-	width: 100%;
-	padding: 20px;
-	height: 30px;
+	width: 100vw;
+	padding: 1.25rem;
+	height: 4rem;
 	display: flex;
 	justify-content: space-between;
 	z-index: 1;
@@ -123,7 +144,48 @@
 
 .nav__logo {
 	position: fixed;
-	left: 20px;
-	width: 80px;
+	left: 1.25rem;
+	width: 5rem;
 	object-fit: contain;
+}
+
+.popup__conatiner {
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 10000;
+	background: rgba(0, 0, 0, 0.95);
+	width: 100%;
+	height: 113vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+}
+
+.popUp {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100vw;
+	height: 100vh;
+	margin-top: 2.5rem;
+}
+
+.close {
+	display: inline-block;
+	right: 1rem;
+	top: 2rem;
+	position: absolute;
+	z-index: 1000000;
+	color: #fff;
+	font-size: 1.7rem;
+	font-weight: 400;
+}
+
+.close:hover {
+	cursor: pointer;
 }

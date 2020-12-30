@@ -118,34 +118,29 @@ const makeRowData = () => {
 			if (element.poster_path) {
 				const movie = document.createElement('div');
 				const poster = document.createElement('img');
-				const trailerLink = document.createElement('a');
-				trailerLink.setAttribute('target', 'new');
 
 				poster.setAttribute('src', `${basePosterUrl}${element.poster_path}`);
 				poster.setAttribute('alt', 'Poster');
 				poster.setAttribute('key', element.id);
 				poster.classList.add('row__poster');
 
-				trailerLink.append(poster);
-
-				movie.append(trailerLink);
+				movie.append(poster);
 
 				contentDiv.append(movie);
 
 				poster.addEventListener('click', async () => {
 					if (element.name) {
 						const term = element.name;
-						const searchTerm = term.replace(/\s/g, '') + 'Trailer';
-						trailerLink.setAttribute('href', `https://www.youtube.com/results?search_query=${searchTerm}`);
+						makeSeriesId(term);
 					} else {
 						const term = element.title;
 						await movieTrailer(`${term}`)
 							.then((res) => {
-								makePopup(`${res}`);
+								makeMovieId(`${res}`);
 								window.scrollTo(0, 0);
 							})
 							.catch(() => {
-								console.log('Trailer Not found');
+								alert('Trailer Not found');
 							});
 					}
 				});
@@ -155,12 +150,47 @@ const makeRowData = () => {
 };
 makeRowData();
 
-const popUp = document.createElement('div');
-const makePopup = (link) => {
-	var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-	var match = link.match(regExp);
+//creating a series id
+const makeSeriesId = async (term) => {
+	//modifing term value
+	const newTerm = term.replace(/\s+/g, '').replace("'", '') + 'Trailer';
+	const seriesData1 = await axios
+		.get(
+			`https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCWOA1ZGywLbqmigxE4Qlvuw&maxResults=1&q=${newTerm}&key=AIzaSyAEdgbd8AnBUmtWoWSsFLpAai1uxjrlaMo`
+		)
+		.catch(() => {
+			alert('Server error please try again later');
+		});
+	if (seriesData1.data.items.length === 0) {
+		const tweakedTerm = newTerm.replace('Trailer', '');
+		const seriesData2 = await axios
+			.get(
+				`https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=UCWOA1ZGywLbqmigxE4Qlvuw&maxResults=1&q=${tweakedTerm}&key=AIzaSyAEdgbd8AnBUmtWoWSsFLpAai1uxjrlaMo`
+			)
+			.catch(() => {
+				alert('Server error please try again later');
+			});
+		const seriesId2 = seriesData2.data.items[0].id.videoId;
+		makePopup(seriesId2);
+		return;
+	}
+
+	const seriesId1 = seriesData1.data.items[0].id.videoId;
+	makePopup(seriesId1);
+};
+
+//to extract id from movie link.
+const makeMovieId = (link) => {
+	let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+	let match = link.match(regExp);
 	const videoId = match && match[7].length == 11 ? match[7] : false;
 
+	makePopup(videoId);
+};
+
+//make the popUp
+const popUp = document.createElement('div');
+const makePopup = (id) => {
 	popUp.classList.add('popUp');
 
 	popUp.innerHTML = `
@@ -179,13 +209,21 @@ const makePopup = (link) => {
         msallowfullscreen="msallowfullscreen" 
         oallowfullscreen="oallowfullscreen" 
         webkitallowfullscreen="webkitallowfullscreen"
-	 	src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+	 	src="https://www.youtube.com/embed/${id}?autoplay=1"
 		frameborder="0"  />
 	</div>
 		`;
 
 	const app = document.querySelector('.app');
 	app.prepend(popUp);
+
+	//closing popUp
+	popUp.addEventListener('click', (e) => {
+		const div = document.querySelector('.popup__conatiner');
+		if (e.target === div) {
+			app.removeChild(popUp);
+		}
+	});
 
 	const closeIcon = document.querySelector('.close');
 	closeIcon.addEventListener('click', () => {
